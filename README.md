@@ -1,16 +1,20 @@
 # Torn City Raspberry Pi Dashboard
 
-A full-screen Rich terminal dashboard designed for a Raspberry Pi 3B and an
-800x480 display. It shows live life, energy, nerve, happiness, profile, money,
-net worth, chain, cooldown, and travel data from Torn API v2.
-The expanded overview also includes city-bank value and maturity, vault and
-faction balances, daily net worth, recovery timers, chain and medical cooldowns,
-and unread message, event, award, and competition counts.
+Torn Dashboard made to work on a Raspberry Pi when connected to a 800x480 display, running the latest version of Ubuntu Server.
+Uses a Limited Access Torn API Key which displays the following information:
+ - Username
+ - Life, Energy, Nerve and Happy (number and bar)
+ - Player Stats: Level, Status, Cash on hand, Points and Current Networth
+ - Fund Stats: Bank Investment, Bank Investment Progress, Vault, Faction Vault, Daily NW and Time until full life
+ - Chain/Cooldowns: Current Chain, Chain Timer, Chain Cooldown, Drug Cooldown, Booster Cooldown, Medical Cooldown and Travel Status
+ - Alerts: Messages, Events and Awards
+ - Time Until: Energy Full, Nerve Full and Drug Cooldown Ready
 
-Colours use the Linux console's native 16-colour ANSI palette so life (blue),
-energy (green), nerve (red), and happy (yellow) remain distinct on tty1.
-The middle panels use white for ordinary values, green for healthy/ready states,
-yellow for active timers or alerts, and grey for inactive zeroes.
+API Updates every 30 seconds, timers update every 1 second so it doesn't look clunky (updates locally rather than pulling from the API every second, does the initial pull then locally will count down)
+
+The dashboard was designed and tested at 800×480. Higher-resolution displays should work, but you may need to adjust the Linux console font so the terminal provides enough columns and rows. The display should be set to its native HDMI resolution, and the dashboard should be run full-screen.
+
+I did use AI to assist with this project 
 
 ## API key
 
