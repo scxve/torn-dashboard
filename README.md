@@ -14,6 +14,8 @@ API Updates every 30 seconds, timers update every 1 second so it doesn't look cl
 
 The dashboard was designed and tested at 800×480. Higher-resolution displays should work, but you may need to adjust the Linux console font so the terminal provides enough columns and rows. The display should be set to its native HDMI resolution, and the dashboard should be run full-screen.
 
+
+
 I did use AI to assist with this project :)
 
 ## API key
@@ -82,3 +84,21 @@ sudo dpkg-reconfigure console-setup
 Choose a Terminus font near 14 px, then reboot. The API interval cannot be set
 below 30 seconds. On request failures the dashboard preserves the last good
 data and gradually backs off to a maximum 60-second retry interval.
+
+## Using SSH
+
+Personally I used SSH and FTP via the program Terminus which I recommend you get if you decide to do the same.
+
+Once you have uploaded the files to your Pi execute the following commands for testing prior to making the script boot on launch:
+
+```bash
+cd ~/torn-dashboard
+
+sudo openvt -c 1 -f -s -- bash -lc "cd '$PWD' && exec '$PWD/.venv/bin/python' '$PWD/dashboard.py'"
+```
+
+This will launch the script to tty1 which is the physical display connected to the Pi rather than booting it in your SSH window, and to stop the dashboard via ssh enter the following:
+
+```bash
+sudo pkill -f 'dashboard.py'
+```
