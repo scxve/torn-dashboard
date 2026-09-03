@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 import json
+import re
 import signal
 import sys
 import time
@@ -107,6 +108,20 @@ def compact_number(value: int | float | None, money: bool = False) -> str:
     return f"${rendered}" if money else rendered
 
 
+def compact_status(status: dict[str, Any]) -> str:
+    """Shorten Torn's travelling status while preserving both locations."""
+    description = str(status.get("description") or status.get("state") or "Unknown")
+    travel_match = re.fullmatch(
+        r"travell?ing from\s+(.+?)\s+to\s+(.+?)[.!]?",
+        description.strip(),
+        flags=re.IGNORECASE,
+    )
+    if travel_match:
+        origin, destination = travel_match.groups()
+        return f"Travelling [{origin} -> {destination}]"
+    return description
+
+
 def load_env_file(path: str = ".env") -> None:
     """Load simple KEY=VALUE entries without requiring python-dotenv."""
     try:
@@ -175,7 +190,7 @@ def resource_panel(label: str, resource: dict[str, Any]) -> Panel:
 def key_value_panel(title: str, rows: list[tuple[str, str, str]]) -> Panel:
     table = Table.grid(expand=True, padding=(0, 1))
     table.add_column(style=WHITE, ratio=1)
-    table.add_column(justify="right", ratio=1)
+    table.add_column(justify="right", ratio=2)
     for label, value, colour in rows:
         table.add_row(label, Text(value, style=f"bold {colour}"))
     return Panel(
@@ -241,7 +256,7 @@ def build_dashboard(state: DashboardState, refresh_seconds: int) -> Layout:
     layout["left"].split_column(Layout(name="player", size=8), Layout(name="funds"))
     layout["right"].split_column(Layout(name="operations", size=11), Layout(name="alerts"))
     status = profile.get("status", {})
-    status_value = str(status.get("description") or status.get("state") or "Unknown")
+    status_value = compact_status(status)
     status_colour = GREEN if status.get("state", "Okay") == "Okay" else AMBER
     life_full = live_countdown(deep_get(bars, "life", "full_time", default=0), elapsed)
     happy_full = live_countdown(deep_get(bars, "happy", "full_time", default=0), elapsed)
@@ -250,7 +265,7 @@ def build_dashboard(state: DashboardState, refresh_seconds: int) -> Layout:
     faction_cash = faction_balance.get("money", 0) if isinstance(faction_balance, dict) else faction_balance
     player_rows = [
         ("LEVEL", str(profile.get("level", "--")), WHITE),
-        ("STATUS", status_value[:24], status_colour),
+        ("STATUS", status_value, status_colour),
         ("CASH", compact_number(money.get("wallet"), money=True), WHITE),
         ("POINTS", compact_number(money.get("points")), WHITE),
         ("NETWORTH", compact_number(networth.get("total"), money=True), WHITE),
