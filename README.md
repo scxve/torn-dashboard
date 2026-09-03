@@ -14,7 +14,7 @@ API Updates every 30 seconds, timers update every 1 second so it doesn't look cl
 
 The dashboard was designed and tested at 800×480. Higher-resolution displays should work, but you may need to adjust the Linux console font so the terminal provides enough columns and rows. The display should be set to its native HDMI resolution, and the dashboard should be run full-screen.
 
-I did use AI to assist with this project 
+I did use AI to assist with this project :)
 
 ## API key
 
