@@ -280,18 +280,20 @@ def build_dashboard(state: DashboardState, refresh_seconds: int) -> Layout:
 
     chain_current = int(chain.get("current", 0) or 0)
     chain_max = int(chain.get("max", 0) or 0)
+    chain_timeout = live_countdown(chain.get("timeout"), elapsed)
+    chain_active = chain_current > 0 and chain_timeout > 0
     chain_value = f"{chain_current:,} / {chain_max:,}" if chain else "INACTIVE"
-    chain_cooldown = time_until(chain.get("cooldown"))
+    chain_cooldown = live_countdown(chain.get("cooldown"), elapsed)
     operations_rows = [
         ("CHAIN", chain_value, WHITE if chain else GREY),
-        ("CHAIN TIMER", format_duration(live_countdown(chain.get("timeout"), elapsed)), AMBER if chain else GREY),
-        ("CHAIN CD", chain_cooldown, AMBER if chain.get("cooldown") else GREY),
+        ("CHAIN TIMER", format_duration(chain_timeout, ready="INACTIVE"), AMBER if chain_active else RED),
+        ("CHAIN CD", format_duration(chain_cooldown) if chain_active else "INACTIVE", AMBER if chain_active else RED),
         ("DRUG CD", format_duration(drug_cd), AMBER if drug_cd else GREEN),
         ("BOOSTER CD", format_duration(booster_cd), AMBER if booster_cd else GREEN),
         ("MEDICAL CD", format_duration(medical_cd), AMBER if medical_cd else GREEN),
         ("TRAVEL", travel_value[:24], WHITE),
     ]
-    layout["operations"].update(key_value_panel("OPERATIONS", operations_rows))
+    layout["operations"].update(key_value_panel("CHAIN + CD", operations_rows))
 
     alerts_rows = [
         ("MESSAGES", str(notifications.get("messages", 0)), AMBER if notifications.get("messages") else GREY),
@@ -309,7 +311,8 @@ def build_dashboard(state: DashboardState, refresh_seconds: int) -> Layout:
     next_line.append("  │  ", style=GREY)
     next_line.append(f"NERVE FULL {format_duration(nerve_full)}", style=WHITE)
     next_line.append("  │  ", style=GREY)
-    next_line.append(f"DRUG READY {format_duration(drug_cd)}", style=WHITE)
+    drug_ready = "DRUG READY" if drug_cd == 0 else f"DRUG READY {format_duration(drug_cd)}"
+    next_line.append(drug_ready, style=WHITE)
     layout["next"].update(Panel(Align.center(next_line), border_style=GREY, padding=(0, 1)))
 
     sync = state.last_sync.astimezone().strftime("%H:%M:%S") if state.last_sync else "--:--:--"
