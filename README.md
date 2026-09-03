@@ -32,6 +32,7 @@ Copy this repo contents into `~/torn-dashboard`  OR use git to install, then run
 sudo apt update
 sudo apt install -y git python3-venv
 
+cd ~
 git clone https://github.com/scxve/torn-dashboard.git
 cd ~/torn-dashboard
 
