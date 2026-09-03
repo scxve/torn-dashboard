@@ -26,10 +26,15 @@ the `Authorization` header and is kept in the local `.env` file.
 
 ## Install
 
-Copy this folder to `~/torn-dashboard`, then run:
+Copy this repo contents into `~/torn-dashboard`  OR use git to install, then run:
 
 ```bash
+sudo apt update
+sudo apt install -y git python3-venv
+
+git clone https://github.com/scxve/torn-dashboard.git
 cd ~/torn-dashboard
+
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env
@@ -56,7 +61,7 @@ Run the included offline checks with:
 For a desk display, the simplest option is console autologin followed by a shell
 startup command. Add this to the end of `~/.bash_profile`:
 ```bash
-cd ~/.bash_profile
+nano ~/.bash_profile
 ```
 then
 ```bash
@@ -67,7 +72,7 @@ fi
 ```
 `Ctrl + O`
 `Enter`
-`Ctrl + C`
+`Ctrl + X`
 
 Enable console autologin with `sudo raspi-config` under **System Options > Boot / Auto Login**.
 
