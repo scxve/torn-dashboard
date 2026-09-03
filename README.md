@@ -58,16 +58,12 @@ startup command. Add this to the end of `/home/pi/.bash_profile`:
 
 ```bash
 if [ "$(tty)" = "/dev/tty1" ]; then
-  cd /home/pi/torn-dashboard
-  exec .venv/bin/python dashboard.py
+    cd "$HOME/torn-dashboard" || exit 1
+    exec .venv/bin/python dashboard.py
 fi
 ```
 
 Enable console autologin with `sudo raspi-config` under **System Options > Boot / Auto Login**.
-
-The included `torn-dashboard.service` is an alternative background service, but
-a normal system service does not automatically draw onto the physical TTY. The
-console-autologin method above is recommended for the attached screen.
 
 ## Display tuning
 
