@@ -26,10 +26,10 @@ the `Authorization` header and is kept in the local `.env` file.
 
 ## Install
 
-Copy this folder to `/home/pi/torn-dashboard`, then run:
+Copy this folder to `~/torn-dashboard`, then run:
 
 ```bash
-cd /home/pi/torn-dashboard
+cd ~/torn-dashboard
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env
@@ -54,14 +54,20 @@ Run the included offline checks with:
 ## Start automatically in the visible terminal
 
 For a desk display, the simplest option is console autologin followed by a shell
-startup command. Add this to the end of `/home/pi/.bash_profile`:
-
+startup command. Add this to the end of `~/.bash_profile`:
+```bash
+cd ~/.bash_profile
+```
+then
 ```bash
 if [ "$(tty)" = "/dev/tty1" ]; then
     cd "$HOME/torn-dashboard" || exit 1
     exec .venv/bin/python dashboard.py
 fi
 ```
+`Ctrl + O`
+`Enter`
+`Ctrl + C`
 
 Enable console autologin with `sudo raspi-config` under **System Options > Boot / Auto Login**.
 
